@@ -29,8 +29,8 @@ jobs:
 
       - name: Store tag name
         run: |
-          echo "GIT_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-          echo "GIT_TAG_MAIN=${GIT_TAG%-*}" >> $GITHUB_ENV
+          echo "GIT_TAG=${GITHUB_REF#refs/*/}"
+          echo "GIT_TAG_MAIN=${GIT_TAG%-*}"
           echo "CONFIG_FILE_NAME=config-$GIT_TAG_MAIN.json" >> $GITHUB_ENV
         
       - name: Run
