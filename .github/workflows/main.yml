@@ -29,12 +29,12 @@ jobs:
 
       - name: Store tag name
         run: |
-          echo "::set-env name=GIT_TAG::${GITHUB_REF#refs/*/}"
-          echo "::set-env name=GIT_TAG_MAIN::${GIT_TAG%-*}"
-          echo "::set-env name=CONFIG_FILE_NAME::config-${GIT_TAG_MAIN}.json"
+          GIT_TAG=${GITHUB_REF#refs/*/}
+          GIT_TAG_MAIN=${GIT_TAG%-*}
+          echo ::set-output name=filename::config-$GIT_TAG_MAIN.json
         
       - name: Run
-        run: swift run ConfigMaker -o ${{ env.CONFIG_FILE_NAME }}
+        run: swift run ConfigMaker -o ${{ steps.vars.outputs.filename }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -45,5 +45,5 @@ jobs:
           
       - name: Upload config to s3
         run: |
-          aws s3 cp ${{ env.CONFIG_FILE_NAME }} s3://${{ secrets.AWS_S3_BUCKET }} --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+          aws s3 cp ${{ steps.vars.outputs.filename }} s3://${{ secrets.AWS_S3_BUCKET }} --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
 
