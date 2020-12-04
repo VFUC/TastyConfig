@@ -26,9 +26,13 @@ jobs:
       # Runs a single command using the runners shell
       - name: Test
         run: swift test
+
+      - name: Store tag name
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
         
       - name: Run
-        run: swift run
+        run: swift run ConfigMaker -o config-${{ steps.vars.outputs.tag }}.json
 
       # Runs a set of commands using the runners shell
 #       - name: Run a multi-line script
@@ -45,7 +49,7 @@ jobs:
           
       - name: Upload config to s3
         run: |
-          aws s3 cp config.json s3://${{ secrets.AWS_S3_BUCKET }} --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+          aws s3 cp config-${{ steps.vars.outputs.tag }}.json s3://${{ secrets.AWS_S3_BUCKET }} --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
 
 #       - name: Upload to S3
 #         uses: jakejarvis/s3-sync-action@v0.5.1
