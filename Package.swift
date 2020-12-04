@@ -10,6 +10,8 @@ let package = Package(
         .library(
             name: "TastyConfig",
             targets: ["TastyConfig"]),
+		.executable(name: "ConfigMaker",
+					targets: ["ConfigMaker"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -21,6 +23,8 @@ let package = Package(
         .target(
             name: "TastyConfig",
             dependencies: []),
+		.target(name: "ConfigMaker",
+				dependencies: ["TastyConfig"]),
         .testTarget(
             name: "TastyConfigTests",
             dependencies: ["TastyConfig"]),

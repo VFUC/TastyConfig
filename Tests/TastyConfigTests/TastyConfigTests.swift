@@ -2,14 +2,12 @@ import XCTest
 @testable import TastyConfig
 
 final class TastyConfigTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(TastyConfig().text, "Hello, World!")
+    func testConfigEncodeDecode() throws {
+		let configData = try JSONEncoder().encode(configuration)
+		let _ = try JSONDecoder().decode(Configuration.self, from: configData)
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testConfigEncodeDecode", testConfigEncodeDecode),
     ]
 }
