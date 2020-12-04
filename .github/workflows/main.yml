@@ -29,9 +29,9 @@ jobs:
 
       - name: Store tag name
         run: |
-          echo "GIT_TAG=${GITHUB_REF#refs/*/}"
-          echo "GIT_TAG_MAIN=${GIT_TAG%-*}"
-          echo "CONFIG_FILE_NAME=config-$GIT_TAG_MAIN.json" >> $GITHUB_ENV
+          echo "::set-env name=GIT_TAG::${GITHUB_REF#refs/*/}"
+          echo "::set-env name=GIT_TAG_MAIN::${GIT_TAG%-*}"
+          echo "::set-env name=CONFIG_FILE_NAME::config-${GIT_TAG_MAIN}.json"
         
       - name: Run
         run: swift run ConfigMaker -o ${{ env.CONFIG_FILE_NAME }}
