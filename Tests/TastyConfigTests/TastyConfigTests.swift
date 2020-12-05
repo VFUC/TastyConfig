@@ -12,7 +12,8 @@ final class TastyConfigTests: XCTestCase {
 		print("Found \(paths.count) config resources for testing")
 		try paths.forEach({ path in
 			print("Testing decoding of \(path)")
-			let url = try XCTUnwrap(NSURL.fileURL(withPath: path))
+			
+			let url = try XCTUnwrap(URL(fileURLWithPath: path))
 			let data = try Data(contentsOf: url)
 			XCTAssertNoThrow(try Configuration.decoded(from: data))
 		})
