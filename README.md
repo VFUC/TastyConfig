@@ -15,9 +15,7 @@ By using the same Codable struct for encoding and decoding, we try to avoid acci
 - If an updated version of a tag is pushed (e.g. `1.0.0-updated`), it checks out the original tag (e.g. `1.0.0`) and runs its unit tests against the new feed. Since the client app should be using the original tag, this ensures that the new feed is still decodable by the app.
 - Currenly uploads the configuration to S3, which can of course be replaced by any file handling of choice
 
-# How do I..
-
-## use this approach
+## How to use this approach
 
 The idea is that this configuration repository is maintained **alongside the app release**, so a tagged version of this package should resemble the state of the app during this release.
 
@@ -25,10 +23,10 @@ So `MyApp Version 1.0.0` would tell SwiftPM to use this package in the version `
 
 Further updates to the configuration are tagged with the app version as a prefix (e.g. `1.0.0-updated`) and are always checked against the original tag.
 
-## edit the current configuration
+## How to edit the current configuration
 edit [Configuration.swift](Sources/TastyConfig/Configuration.swift)
 
-## generate a config feed using the CLI
+## How to generate a config feed using the CLI
 
 #### Generate config
 
@@ -42,7 +40,7 @@ specify the desired config to produce, as defined in `Configuration.swift`:
 #### Show help
 `swift run ConfigMaker -h` or `--help`
 
-## generate and upload config feed using Github Actions
+## How to generate and upload config feed using Github Actions
 
 - push a tag, e.g. `1.0.0`
 
@@ -50,8 +48,17 @@ This will take the config state at that tag, generate the feed and upload to s3,
 
 ### Updating an existing feed
 
-To update a published feed, edit the configuration and push a new tag consisting of `existingTag` + `-something`.
+#### App is not released yet
+If the app is not released yet and the configuration is changed, we want the app to fetch this new configuration.
+
+- delete the existing tag (e.g. `1.0.0`)
+- add new tag (`1.0.0`) for current configuration
+- in app's Xcode project: Reset package caches, so that the package is fetched again.
+
+#### App is already released
+
+To update a published feed, edit the configuration and push a new tag consisting of `existingTag` + `-something` to indicate this is an updated version of a previously published feed.
 
 As an example, to update `1.0.0`, push `1.0.0-updated`.
 
-The Github Action is setup to truncate from `-` on and thus overwrite the previous file.
+The Github Action is setup to truncate the tag from `-` on and thus overwrite the previous file.
