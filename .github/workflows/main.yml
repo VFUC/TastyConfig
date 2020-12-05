@@ -21,53 +21,54 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout
+      - name: Checkout current state of configuration
         uses: actions/checkout@v2
         with:
-          path: current
+          path: current # checks out into ./app folder
 
       - name: Store tag name
         id: vars
         run: |
           GIT_TAG=${GITHUB_REF#refs/*/}
           GIT_TAG_MAIN=${GIT_TAG%%-*}
+          echo "Git tag is $GIT_TAG"
+          echo "Git main tag (app version) is $GIT_TAG_MAIN"
           echo ::set-output name=tag::$GIT_TAG_MAIN
           echo ::set-output name=maintag::$GIT_TAG_MAIN
           echo ::set-output name=filename::config-$GIT_TAG_MAIN.json
 
-      - name: Checkout 'main tag' state
+      - name: Checkout app state of configuration
         uses: actions/checkout@v2
         with:
-          path: main
-          ref: ${{ steps.vars.outputs.maintag }}
-        continue-on-error: true
+          path: app # checks out into ./app folder
+          ref: ${{ steps.vars.outputs.maintag }} # uses 'maintag' git reference, which should be the version the app uses
 
-      - name: Generate test config
-        working-directory: current
-        run: |
-          swift run ConfigMaker -o ../main/Tests/TastyConfigTests/FeedsToTest/config.json production
-          swift run ConfigMaker -o Tests/TastyConfigTests/FeedsToTest/config.json production
-
-      - name: Test from current state
-        working-directory: current
-        run: swift test
-
-      - name: Test from main state
-        working-directory: main
-        run: swift test
-        
-      - name: Generate upload config
+      - name: Generate feed from current configuration
         working-directory: current
         run: swift run ConfigMaker -o ${{ steps.vars.outputs.filename }} production
 
-      - name: Configure AWS Credentials
+      - name: Copy generated feed into test folders of 'current' and 'app' state
+        working-directory: current
+        run: |
+          cp ${{ steps.vars.outputs.filename }} Tests/TastyConfigTests/FeedsToTest/
+          cp ${{ steps.vars.outputs.filename }} ../app/Tests/TastyConfigTests/FeedsToTest/
+
+      - name: Test new feed from current state
+        working-directory: current
+        run: swift test
+
+      - name: Test new feed from app state
+        working-directory: app
+        run: swift test
+
+      - name: Configure AWS Credentials for upload
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
           
-      - name: Upload config to s3
+      - name: Upload feed to s3
         working-directory: current
         run: |
           aws s3 cp ${{ steps.vars.outputs.filename }} s3://${{ secrets.AWS_S3_BUCKET }} --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
