@@ -23,7 +23,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
+      - name: Generate test config
+        run: swift run ConfigMaker -o Tests/TastyConfigTests/FeedsToTest/config.json production
+
       - name: Test
         run: swift test
 
@@ -34,7 +36,7 @@ jobs:
           GIT_TAG_MAIN=${GIT_TAG%%-*}
           echo ::set-output name=filename::config-$GIT_TAG_MAIN.json
         
-      - name: Run
+      - name: Generate upload config
         run: swift run ConfigMaker -o ${{ steps.vars.outputs.filename }} production
 
       - name: Configure AWS Credentials
