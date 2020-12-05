@@ -6,9 +6,8 @@ import TastyConfig
 /// Helper used to generate config feed
 struct ConfigMaker {
 	static func makeConfig(path: String, configuration: Configuration) throws {
-	  let config = try JSONEncoder().encode(configuration)
-		  
-	  let url = URL(fileURLWithPath: path)
-	  try config.write(to: url)
+		let data = try configuration.encoded()
+		let url = URL(fileURLWithPath: path)
+		try data.write(to: url)
 	}
 }

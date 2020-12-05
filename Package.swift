@@ -31,6 +31,9 @@ let package = Package(
 				]),
         .testTarget(
             name: "TastyConfigTests",
-            dependencies: ["TastyConfig"]),
+			dependencies: ["TastyConfig"],
+			resources: [
+				.copy("FeedsToTest")
+			]),
     ]
 )

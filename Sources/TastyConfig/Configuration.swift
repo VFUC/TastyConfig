@@ -10,6 +10,16 @@ public struct Configuration: Codable {
 }
 
 extension Configuration {
+	public func encoded() throws -> Data {
+		return try JSONEncoder().encode(self)
+	}
+	
+	public static func decoded(from data: Data) throws -> Configuration {
+		return try JSONDecoder().decode(Configuration.self, from: data)
+	}
+}
+
+extension Configuration {
 	/// This instance is used by ConfigMaker to generate the current version of the config feed
 	public static var production: Configuration {
 		Configuration(identifier: "production",
