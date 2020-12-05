@@ -23,18 +23,20 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Generate test config
-        run: swift run ConfigMaker -o Tests/TastyConfigTests/FeedsToTest/config.json production
-
-      - name: Test
-        run: swift test
-
       - name: Store tag name
         id: vars
         run: |
           GIT_TAG=${GITHUB_REF#refs/*/}
           GIT_TAG_MAIN=${GIT_TAG%%-*}
+          echo ::set-output name=tag::$GIT_TAG_MAIN
+          echo ::set-output name=maintag::$GIT_TAG_MAIN
           echo ::set-output name=filename::config-$GIT_TAG_MAIN.json
+
+      - name: Generate test config
+        run: swift run ConfigMaker -o Tests/TastyConfigTests/FeedsToTest/config.json production
+
+      - name: Test
+        run: swift test
         
       - name: Generate upload config
         run: swift run ConfigMaker -o ${{ steps.vars.outputs.filename }} production

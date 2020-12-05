@@ -7,11 +7,14 @@ edit [Configuration.swift](Sources/TastyConfig/Configuration.swift)
 
 ## Generate config-feed using cli
 
-#### Generate config 
-`swift run ConfigMaker`
+#### Generate config
+
+specify the desired config to produce
+
+`swift run ConfigMaker production`
 
 #### Specify output name
-`swift run ConfigMaker -o my-config.json`
+`swift run ConfigMaker -o my-config.json production`
 
 #### Show help
 `swift run ConfigMaker -h` or `--help`
