@@ -35,7 +35,7 @@ jobs:
           echo ::set-output name=filename::config-$GIT_TAG_MAIN.json
         
       - name: Run
-        run: swift run ConfigMaker -o ${{ steps.vars.outputs.filename }}
+        run: swift run ConfigMaker -o ${{ steps.vars.outputs.filename }} production
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1

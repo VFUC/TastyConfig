@@ -3,7 +3,7 @@ import XCTest
 
 final class TastyConfigTests: XCTestCase {
     func testConfigEncodeDecode() throws {
-		let configData = try JSONEncoder().encode(configuration)
+		let configData = try JSONEncoder().encode(Configuration.production)
 		let _ = try JSONDecoder().decode(Configuration.self, from: configData)
     }
 
