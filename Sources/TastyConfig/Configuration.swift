@@ -6,7 +6,7 @@ import Foundation
 public struct Configuration: Codable {
 	public let identifier: String
 	let baseURL: String
-	let feed: String
+	// let feed: String
 }
 
 extension Configuration {
@@ -23,14 +23,14 @@ extension Configuration {
 	/// This instance is used by ConfigMaker to generate the current version of the config feed
 	public static var production: Configuration {
 		Configuration(identifier: "production",
-					  baseURL: "https://api.my.app",
-					  feed: "/feed")
+					  baseURL: "https://api.my.app")
+//					  feed: "/feed")
 	}
 	
 	public static var stage: Configuration {
 		Configuration(identifier: "stage",
-					  baseURL: "https://stage.api.my.app",
-					  feed: "/feed")
+					  baseURL: "https://stage.api.my.app")
+//					  feed: "/feed")
 	}
 	
 	public static var all: [Configuration] {
