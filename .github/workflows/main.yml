@@ -45,6 +45,11 @@ jobs:
       - name: Generate test config
         working-directory: current
         run: |
+          pwd
+          ls -la
+          cd ..
+          pwd
+          ls -la
           swift run ConfigMaker -o ../main/Tests/TastyConfigTests/FeedsToTest/config.json production
           swift run ConfigMaker -o Tests/TastyConfigTests/FeedsToTest/config.json production
 
