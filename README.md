@@ -3,9 +3,9 @@
 ### What is this?
 This is a template repository for a "Swift package based app configuration feed". 
 It contains
-    - a Swift Package declaring a configuration struct, which an app can include as dependency
-    - a Swift CLI which can generate a JSON-feed from the current configuration
-    - GitHub Actions configured so that new feeds are generated when a tagged configuration is pushed, tests to ensure we don't publish incompatible feed updates
+- a Swift Package declaring a configuration struct, which an app can include as dependency
+- a Swift CLI which can generate a JSON-feed from the current configuration
+- GitHub Actions configured so that new feeds are generated when a tagged configuration is pushed, tests to ensure we don't publish incompatible feed updates
 
 ### Why would I want this?
 By using the same Codable struct for encoding and decoding, we try to avoid accidentally publishing a feed our app can't parse.
